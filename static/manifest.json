@@ -1,0 +1,19 @@
+{
+  "manifest_version": 3,
+  "name": "ascii sharks",
+  "version": "0.3.0",
+  "author": "Gregori Bedin",
+  "homepage_url": "https://github.com/xmiolo/ascii-sharks",
+  "description": "ASCII sharks swimming behind the pages you choose, like the Claude, ChatGPT and Google home screens.",
+  "permissions": ["storage", "scripting"],
+  "host_permissions": [
+    "https://claude.ai/*",
+    "https://chatgpt.com/*",
+    "https://www.google.com/*",
+    "https://www.google.com.br/*"
+  ],
+  "optional_host_permissions": ["*://*/*"],
+  "background": { "service_worker": "background.js" },
+  "options_ui": { "page": "options.html", "open_in_tab": true },
+  "action": { "default_title": "ascii sharks: choose pages" }
+}

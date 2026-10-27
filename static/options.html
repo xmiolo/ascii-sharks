@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>ascii sharks</title>
+    <style>
+      :root { color-scheme: light dark; --fg: #1b1d24; --muted: #6b6f7a; --bg: #fff; --line: #d8dae0; --error: #c0392b; }
+      @media (prefers-color-scheme: dark) {
+        :root { --fg: #e6eeff; --muted: #9aa0ad; --bg: #111216; --line: #2a2d36; --error: #ff7a6b; }
+      }
+      body { margin: 0; padding: 32px 24px; background: var(--bg); color: var(--fg); font: 14px/1.5 system-ui, sans-serif; }
+      main { max-width: 640px; margin: 0 auto; }
+      h1 { margin: 0 0 4px; font: 600 20px ui-monospace, Menlo, monospace; }
+      p { margin: 0 0 16px; color: var(--muted); }
+      code { font-family: ui-monospace, Menlo, monospace; color: var(--fg); }
+      textarea {
+        box-sizing: border-box; width: 100%; min-height: 220px; padding: 12px;
+        border: 1px solid var(--line); border-radius: 8px; background: transparent; color: inherit;
+        font: 13px/1.6 ui-monospace, Menlo, monospace; resize: vertical;
+      }
+      .actions { display: flex; gap: 8px; margin: 12px 0; }
+      button { padding: 8px 14px; border: 1px solid var(--line); border-radius: 8px; background: transparent; color: inherit; font: inherit; cursor: pointer; }
+      button.primary { background: var(--fg); color: var(--bg); border-color: var(--fg); }
+      #status { min-height: 1.5em; }
+      #status.error { color: var(--error); }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>ascii sharks</h1>
+      <p>Pages where the sharks swim, one URL per line. Query strings and <code>#</code> are ignored.</p>
+      <p>
+        <code>https://claude.ai/new</code> exact page ·
+        <code>https://example.com/docs/*</code> anything under a path ·
+        <code>https://*.example.com/</code> any subdomain ·
+        lines starting with <code>#</code> are comments
+      </p>
+      <textarea id="urls" spellcheck="false" aria-label="URLs"></textarea>
+      <div class="actions">
+        <button id="save" class="primary">Save</button>
+        <button id="reset">Restore defaults</button>
+      </div>
+      <p id="status" role="status"></p>
+    </main>
+    <script src="options.js"></script>
+  </body>
+</html>

@@ -1,14 +1,7 @@
-import { OceanEngine } from "../src";
+import { OceanEngine } from "./ocean/engine";
+import { loadUrls, parsePattern, type PagePattern } from "./patterns";
 
-// Paths of each site's empty "home" screen. All three are SPAs (or close to it),
-// so the path is re-checked while the tab lives.
-const HOME_PATHS: Record<string, Set<string>> = {
-  "claude.ai": new Set(["/", "/new"]),
-  "chatgpt.com": new Set(["/"]),
-  "www.google.com": new Set(["/", "/webhp"]),
-  "www.google.com.br": new Set(["/", "/webhp"]),
-};
-
+let patterns: PagePattern[] = [];
 let canvas: HTMLCanvasElement | null = null;
 let engine: OceanEngine | null = null;
 
@@ -57,13 +50,22 @@ function unmount() {
   canvas = null;
 }
 
-// Content scripts can't hook the page's history.pushState, so poll the path
-// (and the theme, which these sites can switch without a reload).
-const homePaths = HOME_PATHS[location.hostname];
-if (homePaths) {
+function setUrls(urls: string[]) {
+  patterns = urls.map(parsePattern).filter((p): p is PagePattern => p !== null);
+}
+
+loadUrls().then((urls) => {
+  setUrls(urls);
+  // Content scripts can't hook the page's history.pushState, so poll the URL
+  // (and the theme, which these sites can switch without a reload).
   setInterval(() => {
-    if (homePaths.has(location.pathname)) mount();
+    const url = new URL(location.href);
+    if (patterns.some((p) => p.test(url))) mount();
     else unmount();
     if (canvas) applyTheme(canvas);
   }, 400);
-}
+});
+
+chrome.storage.onChanged.addListener((changes) => {
+  if (changes.urls) loadUrls().then(setUrls);
+});

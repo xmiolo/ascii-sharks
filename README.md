@@ -20,36 +20,16 @@ t'                            ''XSSS8SSX%XX8#.    %XSX%
                             .
 ```
 
-Fish and sharks drawn as ASCII on a canvas. Zero dependencies.
+A Chrome extension that puts an ocean of ASCII fish and sharks behind the pages you choose.
+Out of the box: the home screens of Claude, ChatGPT and Google.
 
-Ships two ways:
-
-- **Chrome extension**: sharks swim behind the home screens of Claude, ChatGPT and Google.
-- **Library**: drop the ocean into any page or React app.
-
-## Chrome extension
-
-The ocean shows up only on each site's empty home screen and is torn down as soon as you
-open a conversation or a search result, so it costs nothing while you work.
-
-| Site    | Pages                                                       |
-| ------- | ----------------------------------------------------------- |
-| Claude  | `claude.ai/`, `claude.ai/new`                               |
-| ChatGPT | `chatgpt.com/`                                              |
-| Google  | `www.google.com/`, `www.google.com.br/` (and `/webhp`)      |
-
-The canvas sits on top of the page with `pointer-events: none`, so every click still reaches
-the site. It blends with the page instead of covering it: on dark pages the ocean's black
-background drops out (`screen`), on light pages it is inverted and multiplied, so the sharks
-show up dark on white. The theme is re-checked while the tab is open.
-
-### Install (just the extension, no build)
+## Install
 
 Works in Chrome, Edge, Brave and other Chromium browsers. No Node or terminal needed.
 
 1. Download `ascii-sharks-extension.zip` from the
    [latest release](https://github.com/xmiolo/ascii-sharks/releases/latest).
-2. Unzip it into a folder you'll keep around (Chrome loads the extension from that folder,
+2. Unzip it into a folder you'll keep around (the browser loads the extension from that folder,
    so deleting or moving it removes the extension).
 3. Open `chrome://extensions` (Edge: `edge://extensions`, Brave: `brave://extensions`) and turn
    on **Developer mode** in the top right corner.
@@ -59,61 +39,67 @@ Works in Chrome, Edge, Brave and other Chromium browsers. No Node or terminal ne
 To update, download the new zip, replace the folder's contents and hit the reload button on
 the extension card. To remove it, click **Remove** on the same card.
 
-### Build from source
+## Choose the pages
+
+Click the extension's icon in the toolbar (or **Details → Extension options**) and list the
+pages, one URL per line:
+
+```
+https://claude.ai/new           exact page (query string and # are ignored)
+https://chatgpt.com/            site root only, not the conversations
+https://example.com/docs/*      anything under /docs/
+https://*.example.com/          any subdomain
+# lines starting with # are comments
+```
+
+On **Save**, the browser asks for access to any new site in the list; the extension only runs
+on sites you granted. Reload open tabs to see the change. **Restore defaults** brings back:
+
+| Site    | Pages                                                  |
+| ------- | ------------------------------------------------------ |
+| Claude  | `claude.ai/`, `claude.ai/new`                          |
+| ChatGPT | `chatgpt.com/`                                         |
+| Google  | `www.google.com/`, `www.google.com.br/` (and `/webhp`) |
+
+Browsers can't wildcard a top-level domain, so each Google domain (`google.pt`, ...) needs its
+own line.
+
+## How it works
+
+The ocean only lives on the listed pages: open a conversation or a search result and it is torn
+down, so it costs nothing while you work. Single-page apps are followed as you navigate.
+
+The canvas sits on top of the page with `pointer-events: none`, so every click still reaches
+the site. It blends with the page instead of covering it: on dark pages the ocean's black
+background drops out (`screen`), on light pages it is inverted and multiplied, so the sharks
+show up dark on white. The theme is re-checked while the tab is open. Sharks follow the mouse,
+and clicking splashes the water.
+
+## Build from source
 
 ```sh
 npm install
-npm run build:extension   # outputs dist-extension/
-npm run pack:extension    # builds and zips it into ascii-sharks-extension.zip
+npm run build   # outputs dist/, load it with "Load unpacked"
+npm run pack    # builds and zips it into ascii-sharks-extension.zip
 ```
 
-Load `dist-extension/` with **Load unpacked** as above. After rebuilding, hit the reload
-button on the extension card.
-
-### Customize
-
-- **More sites or Google domains**: add the host to `matches` in
-  `extension/public/manifest.json` and its home paths to `HOME_PATHS` in `extension/content.ts`.
-  Chrome match patterns can't wildcard a TLD, so each Google domain (`google.pt`, ...) is listed
-  on its own.
-- **Intensity**: tweak the opacities in `applyTheme` (`extension/content.ts`).
-
-## Library
-
-```sh
-npm install && npm run dev
-```
-
-```ts
-import { OceanEngine } from "./src";
-
-const engine = new OceanEngine(canvas, [{ kind: "hammerhead", size: 1 }]);
-```
-
-The demo takes `?sharks=thresher,hammerhead,mako,nurse`: the first is the biggest, the rest step down.
-
-React:
-
-```tsx
-import { AsciiOcean } from "./src/react";
-
-<AsciiOcean sharks={[{ kind: "tiger", size: 1 }]} />;
-```
-
-Glyphs come from the canvas's `font-family`, so give it (or a parent) a monospace font.
-
-## Project layout
+After rebuilding, hit the reload button on the extension card.
 
 ```
-src/          ocean engine (world simulation + ASCII renderer) and the React wrapper
-extension/    Chrome extension: content script + manifest (MV3)
-demo.ts       standalone demo page
+src/ocean/        ocean engine: world simulation and ASCII renderer
+src/content.ts    mounts the ocean on matching pages
+src/background.ts registers the content script on the sites you chose
+src/options.ts    options page logic
+src/patterns.ts   URL list parsing and defaults
+static/           manifest.json and options.html
+build.mjs         esbuild bundling into dist/
 ```
 
 ## Credits
 
-The Chrome extension is by Gregori Bedin ([@xmiolo](https://github.com/xmiolo)). The ocean engine comes from
-[stackedlol/ascii-sharks](https://github.com/stackedlol/ascii-sharks) by drewdi and contributors.
+The extension is by Gregori Bedin ([@xmiolo](https://github.com/xmiolo)). The ocean engine
+comes from [stackedlol/ascii-sharks](https://github.com/stackedlol/ascii-sharks) by drewdi and
+contributors.
 
 ## License
 
