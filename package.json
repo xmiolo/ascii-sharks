@@ -17,6 +17,7 @@
     "dev": "vite",
     "build": "vite build",
     "build:extension": "vite build --config vite.extension.config.ts",
+    "pack:extension": "npm run build:extension && cd dist-extension && zip -qr ../ascii-sharks-extension.zip . -x '.*'",
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {

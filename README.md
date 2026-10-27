@@ -43,18 +43,32 @@ the site. It blends with the page instead of covering it: on dark pages the ocea
 background drops out (`screen`), on light pages it is inverted and multiplied, so the sharks
 show up dark on white. The theme is re-checked while the tab is open.
 
-### Install (unpacked)
+### Install (just the extension, no build)
+
+Works in Chrome, Edge, Brave and other Chromium browsers. No Node or terminal needed.
+
+1. Download `ascii-sharks-extension.zip` from the
+   [latest release](https://github.com/xmiolo/ascii-sharks/releases/latest).
+2. Unzip it into a folder you'll keep around (Chrome loads the extension from that folder,
+   so deleting or moving it removes the extension).
+3. Open `chrome://extensions` (Edge: `edge://extensions`, Brave: `brave://extensions`) and turn
+   on **Developer mode** in the top right corner.
+4. Click **Load unpacked** and pick the unzipped folder (the one that has `manifest.json` inside).
+5. Open `claude.ai/new`, `chatgpt.com` or `google.com`.
+
+To update, download the new zip, replace the folder's contents and hit the reload button on
+the extension card. To remove it, click **Remove** on the same card.
+
+### Build from source
 
 ```sh
 npm install
-npm run build:extension
+npm run build:extension   # outputs dist-extension/
+npm run pack:extension    # builds and zips it into ascii-sharks-extension.zip
 ```
 
-1. Open `chrome://extensions` and turn on **Developer mode**.
-2. Click **Load unpacked** and pick the `dist-extension/` folder.
-3. Open `claude.ai/new`, `chatgpt.com` or `google.com`.
-
-After rebuilding, hit the reload button on the extension card.
+Load `dist-extension/` with **Load unpacked** as above. After rebuilding, hit the reload
+button on the extension card.
 
 ### Customize
 
