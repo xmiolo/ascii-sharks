@@ -1,13 +1,22 @@
 {
   "name": "ascii-sharks",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
+  "description": "ASCII sharks on a canvas, as a library and as a Chrome extension for the Claude, ChatGPT and Google home screens.",
+  "author": "Gregori Bedin",
+  "contributors": ["drewdi (original ocean engine)"],
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/xmiolo/ascii-sharks.git"
+  },
+  "homepage": "https://github.com/xmiolo/ascii-sharks#readme",
   "type": "module",
   "main": "src/index.ts",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "build:extension": "vite build --config vite.extension.config.ts",
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {

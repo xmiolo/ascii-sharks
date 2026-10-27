@@ -1,0 +1,20 @@
+{
+  "manifest_version": 3,
+  "name": "ascii sharks",
+  "version": "0.2.0",
+  "author": "Gregori Bedin",
+  "homepage_url": "https://github.com/xmiolo/ascii-sharks",
+  "description": "ASCII sharks swimming behind the Claude, ChatGPT and Google home screens.",
+  "content_scripts": [
+    {
+      "matches": [
+        "https://claude.ai/*",
+        "https://chatgpt.com/*",
+        "https://www.google.com/*",
+        "https://www.google.com.br/*"
+      ],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ]
+}

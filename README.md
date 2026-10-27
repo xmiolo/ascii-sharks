@@ -22,6 +22,50 @@ t'                            ''XSSS8SSX%XX8#.    %XSX%
 
 Fish and sharks drawn as ASCII on a canvas. Zero dependencies.
 
+Ships two ways:
+
+- **Chrome extension**: sharks swim behind the home screens of Claude, ChatGPT and Google.
+- **Library**: drop the ocean into any page or React app.
+
+## Chrome extension
+
+The ocean shows up only on each site's empty home screen and is torn down as soon as you
+open a conversation or a search result, so it costs nothing while you work.
+
+| Site    | Pages                                                       |
+| ------- | ----------------------------------------------------------- |
+| Claude  | `claude.ai/`, `claude.ai/new`                               |
+| ChatGPT | `chatgpt.com/`                                              |
+| Google  | `www.google.com/`, `www.google.com.br/` (and `/webhp`)      |
+
+The canvas sits on top of the page with `pointer-events: none`, so every click still reaches
+the site. It blends with the page instead of covering it: on dark pages the ocean's black
+background drops out (`screen`), on light pages it is inverted and multiplied, so the sharks
+show up dark on white. The theme is re-checked while the tab is open.
+
+### Install (unpacked)
+
+```sh
+npm install
+npm run build:extension
+```
+
+1. Open `chrome://extensions` and turn on **Developer mode**.
+2. Click **Load unpacked** and pick the `dist-extension/` folder.
+3. Open `claude.ai/new`, `chatgpt.com` or `google.com`.
+
+After rebuilding, hit the reload button on the extension card.
+
+### Customize
+
+- **More sites or Google domains**: add the host to `matches` in
+  `extension/public/manifest.json` and its home paths to `HOME_PATHS` in `extension/content.ts`.
+  Chrome match patterns can't wildcard a TLD, so each Google domain (`google.pt`, ...) is listed
+  on its own.
+- **Intensity**: tweak the opacities in `applyTheme` (`extension/content.ts`).
+
+## Library
+
 ```sh
 npm install && npm run dev
 ```
@@ -32,4 +76,31 @@ import { OceanEngine } from "./src";
 const engine = new OceanEngine(canvas, [{ kind: "hammerhead", size: 1 }]);
 ```
 
-MIT
+The demo takes `?sharks=thresher,hammerhead,mako,nurse`: the first is the biggest, the rest step down.
+
+React:
+
+```tsx
+import { AsciiOcean } from "./src/react";
+
+<AsciiOcean sharks={[{ kind: "tiger", size: 1 }]} />;
+```
+
+Glyphs come from the canvas's `font-family`, so give it (or a parent) a monospace font.
+
+## Project layout
+
+```
+src/          ocean engine (world simulation + ASCII renderer) and the React wrapper
+extension/    Chrome extension: content script + manifest (MV3)
+demo.ts       standalone demo page
+```
+
+## Credits
+
+The Chrome extension is by Gregori Bedin ([@xmiolo](https://github.com/xmiolo)). The ocean engine comes from
+[stackedlol/ascii-sharks](https://github.com/stackedlol/ascii-sharks) by drewdi and contributors.
+
+## License
+
+MIT. See [LICENSE](LICENSE).
